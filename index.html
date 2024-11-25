@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DSA Series Leaderboard</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(120deg, #2a2d4b, #3c3f73);
+        color: #fff;
+        padding: 20px;
+        margin: 0;
+      }
+
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+      }
+
+      .leaderboard {
+        background: #ffffff;
+        color: #333;
+        border-radius: 15px;
+        box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.3);
+        padding: 30px;
+        margin: 50px auto;
+      }
+
+      .leaderboard h1 {
+        color: #2a2d4b;
+        font-size: 2.5rem;
+        text-align: center;
+        margin-bottom: 20px;
+        font-weight: bold;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+
+      thead {
+        background-color: #2a2d4b;
+        color: #ffffff;
+      }
+
+      th,
+      td {
+        padding: 12px;
+        text-align: center;
+        font-size: 1rem;
+        border: 1px solid #ddd;
+      }
+
+      th {
+        position: relative;
+        cursor: pointer;
+        font-weight: bold;
+      }
+
+      th .arrows {
+        font-size: 0.8rem;
+        margin-left: 5px;
+        opacity: 0.7;
+      }
+
+      th.asc .arrow-up {
+        color: green;
+      }
+
+      th.desc .arrow-down {
+        color: red;
+      }
+
+      th.active .arrow-up,
+      th.active .arrow-down {
+        opacity: 1;
+      }
+
+      tbody tr:nth-child(odd) {
+        background: #f9f9f9;
+      }
+
+      tbody tr:nth-child(even) {
+        background: #eeeeee;
+      }
+
+      tbody tr {
+        transition: transform 1s linear, background-color 1s linear,
+          color 1s linear;
+      }
+
+      tbody tr:hover {
+        background: #f3d250;
+        color: #2a2d4b;
+        transform: scale(1.05);
+      }
+
+      .footer {
+        text-align: center;
+        padding: 15px;
+        margin-top: 20px;
+        background-color: #2a2d4b;
+        color: #ffffff;
+        font-size: 0.9rem;
+        box-shadow: 0 -3px 10px rgba(0, 0, 0, 0.2);
+        border-radius: 10px;
+      }
+
+      .time-display {
+        position: absolute;
+        top: 10px;
+        right: 20px;
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #f3d250;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="time-display" id="currentTime">Loading...</div>
+
+    <div class="container">
+      <div class="leaderboard">
+        <h1>DSA Series Contest-1 Leaderboard</h1>
+        <table class="table" id="marksTable">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th data-sort="maths">
+                Maths
+                <span class="arrows">
+                  <span class="arrow-up">↑</span>
+                  <span class="arrow-down">↓</span>
+                </span>
+              </th>
+              <th data-sort="physics">
+                Physics
+                <span class="arrows">
+                  <span class="arrow-up">↑</span>
+                  <span class="arrow-down">↓</span>
+                </span>
+              </th>
+              <th data-sort="dsa">
+                DSA
+                <span class="arrows">
+                  <span class="arrow-up">↑</span>
+                  <span class="arrow-down">↓</span>
+                </span>
+              </th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <footer class="footer">&copy; 2024 SPC DSA-Series</footer>
+
+    <script>
+      const students = [
+        { name: "Praneeth", maths: 55, physics: 60, dsa: 70 },
+        { name: "Anjali", maths: 88, physics: 92, dsa: 85 },
+        { name: "Karthik", maths: 77, physics: 80, dsa: 85 },
+        { name: "Sanya", maths: 92, physics: 85, dsa: 90 },
+        { name: "Nikhil", maths: 65, physics: 78, dsa: 60 },
+        { name: "Praneeth", maths: 55, physics: 60, dsa: 70 },
+        { name: "Anjali", maths: 88, physics: 92, dsa: 85 },
+        { name: "Karthik", maths: 77, physics: 80, dsa: 85 },
+        { name: "Sanya", maths: 92, physics: 85, dsa: 90 },
+        { name: "Nikhil", maths: 65, physics: 78, dsa: 60 },
+        { name: "Praneeth", maths: 55, physics: 60, dsa: 70 },
+        { name: "Anjali", maths: 88, physics: 92, dsa: 85 },
+        { name: "Karthik", maths: 77, physics: 80, dsa: 85 },
+        { name: "Sanya", maths: 92, physics: 85, dsa: 90 },
+        { name: "Nikhil", maths: 65, physics: 78, dsa: 60 },
+        { name: "Praneeth", maths: 55, physics: 60, dsa: 70 },
+        { name: "Anjali", maths: 88, physics: 92, dsa: 85 },
+        { name: "Karthik", maths: 77, physics: 80, dsa: 85 },
+        { name: "Sanya", maths: 92, physics: 85, dsa: 90 },
+        { name: "Nikhil", maths: 65, physics: 78, dsa: 60 },
+        { name: "Praneeth", maths: 55, physics: 60, dsa: 70 },
+        { name: "Anjali", maths: 88, physics: 92, dsa: 85 },
+        { name: "Karthik", maths: 77, physics: 80, dsa: 85 },
+        { name: "Sanya", maths: 92, physics: 85, dsa: 90 },
+        { name: "Nikhil", maths: 65, physics: 78, dsa: 60 },
+        { name: "Praneeth", maths: 55, physics: 60, dsa: 70 },
+        { name: "Anjali", maths: 88, physics: 92, dsa: 85 },
+        { name: "Karthik", maths: 77, physics: 80, dsa: 85 },
+        { name: "Sanya", maths: 92, physics: 85, dsa: 90 },
+        { name: "Nikhil", maths: 65, physics: 78, dsa: 60 },
+        { name: "Praneeth", maths: 55, physics: 60, dsa: 70 },
+        { name: "Anjali", maths: 88, physics: 92, dsa: 85 },
+        { name: "Karthik", maths: 77, physics: 80, dsa: 85 },
+        { name: "Sanya", maths: 92, physics: 85, dsa: 90 },
+        { name: "Nikhil", maths: 65, physics: 78, dsa: 60 },
+        { name: "Praneeth", maths: 55, physics: 60, dsa: 70 },
+        { name: "Anjali", maths: 88, physics: 92, dsa: 85 },
+        { name: "Karthik", maths: 77, physics: 80, dsa: 85 },
+        { name: "Sanya", maths: 92, physics: 85, dsa: 90 },
+        { name: "Nikhil", maths: 65, physics: 78, dsa: 60 },
+        { name: "Praneeth", maths: 55, physics: 60, dsa: 70 },
+        { name: "Anjali", maths: 88, physics: 92, dsa: 85 },
+        { name: "Karthik", maths: 77, physics: 80, dsa: 85 },
+        { name: "Sanya", maths: 92, physics: 85, dsa: 90 },
+        { name: "Nikhil", maths: 65, physics: 78, dsa: 60 },
+      ];
+
+      const tableBody = document.querySelector("#marksTable tbody");
+      const tableHeaders = document.querySelectorAll("th[data-sort]");
+
+      function renderTable(data) {
+        tableBody.innerHTML = "";
+        data.forEach((student) => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${student.name}</td>
+            <td>${student.maths}</td>
+            <td>${student.physics}</td>
+            <td>${student.dsa}</td>
+          `;
+          tableBody.appendChild(row);
+        });
+      }
+
+      let currentSort = { column: null, direction: null };
+
+      function sortTable(column, direction) {
+        const sorted = [...students].sort((a, b) => {
+          if (direction === "asc") {
+            return a[column] - b[column];
+          } else {
+            return b[column] - a[column];
+          }
+        });
+        renderTable(sorted);
+      }
+
+      tableHeaders.forEach((header) => {
+        header.addEventListener("click", () => {
+          const column = header.getAttribute("data-sort");
+          const newDirection =
+            currentSort.column === column && currentSort.direction === "asc"
+              ? "desc"
+              : "asc";
+          currentSort = { column, direction: newDirection };
+
+          tableHeaders.forEach((h) =>
+            h.classList.remove("active", "asc", "desc")
+          );
+          header.classList.add("active", newDirection);
+
+          sortTable(column, newDirection);
+        });
+      });
+
+      renderTable(students);
+
+      function updateTime() {
+        const now = new Date();
+        const options = {
+          timeZone: "Asia/Kolkata",
+          weekday: "long",
+          day: "2-digit",
+          month: "long",
+          year: "numeric",
+        };
+        const indianTime = now.toLocaleDateString("en-IN", options);
+        document.getElementById("currentTime").textContent = `${indianTime}`;
+      }
+      setInterval(updateTime, 1000);
+      updateTime();
+    </script>
+  </body>
+</html>
